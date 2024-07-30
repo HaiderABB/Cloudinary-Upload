@@ -1,46 +1,35 @@
 require('dotenv').config();
-const express = require('express');
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const CloudinaryConfig = require('../Config/CloudinaryConfig')
+const CheckFileType = require('../Helper/CheckFileType');
 
 const CloudinaryStore = new CloudinaryStorage({
+
   cloudinary: cloudinary,
   params: (req, file) => {
     return {
       folder: 'ArduinoResults',
       allowedFormats: ['jpg', 'png', 'jpeg', 'svg'], // Allowed file formats
-      // transformation: [{ width: 500, height: 500, crop: 'limit' }], // Optional transformations
-      public_id: (req.body.customName || file.fieldname) + '-' + Date.now() + path.extname(file.originalname) // Custom image name
+      public_id: (req.body.customName || file.fieldname) + '-' + Date.now() + path.extname(file.originalname)
     }
-  },
+  }
+
 })
 
 
-const CheckFileType = async (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png|/;
-  // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
-
-  if (mimetype && extname) {
-    return cb(null, true);
-  } else {
-    cb(new Error('Only images are allowed!'), false);
-  }
-}
-
-
-const upload = multer({ storage: CloudinaryStore, fileFilter: CheckFileType }).single('image'); // 'image' is the field name for the file
+const upload = multer({ storage: CloudinaryStore, fileFilter: CheckFileType }).single('image');
+// image is key name in req
 
 const UploadCloudinary = async (req, res) => {
 
+  // Function for configuring global cloudinary credentials
   CloudinaryConfig();
 
   upload(req, res, (err) => {
+
     if (err) {
       return res.status(400).json({ message: err.message });
     }
@@ -54,6 +43,7 @@ const UploadCloudinary = async (req, res) => {
       message: 'Image uploaded successfully',
       url: req.file.path, // URL of the uploaded image
     });
+
   });
 
 
