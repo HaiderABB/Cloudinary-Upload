@@ -1,6 +1,6 @@
 const createError = require('http-errors');
 const express = require('express');
-const UploadRouter = require('./routes/index');
+const UploadRouter = require('./routes/route');
 const app = express();
 const dotenv = require('dotenv');
 dotenv.config({ path: '../.env' });
