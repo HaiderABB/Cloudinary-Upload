@@ -2,13 +2,13 @@ const path = require('path');
 
 
 const CheckFileType = async (req, file, cb) => {
-  const filetypes = /jpeg|jpg|png|/;
+  const filetypes = ['.jpg', '.jpeg', '.png', '.svg'];
   // Check ext
-  const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-  // Check mime
-  const mimetype = filetypes.test(file.mimetype);
+  console.log(path.extname(file.originalname).toLowerCase())
+  const extname = filetypes.includes(path.extname(file.originalname).toLowerCase());
+  console.log(extname);
 
-  if (mimetype && extname) {
+  if (extname) {
     return cb(null, true);
   } else {
     cb(new Error('Only images are allowed!'), false);
