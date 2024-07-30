@@ -1,4 +1,8 @@
-{
+{"name":"cloudinary-upload",
+  "version": "1.0.0",
+  "scripts":{
+   "start":"node Src/app"
+  },
   "dependencies": {
     "cloudinary": "^1.41.3",
     "express": "^4.19.2",
